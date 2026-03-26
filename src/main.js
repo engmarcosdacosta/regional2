@@ -13,6 +13,7 @@ const MAX_MAP_ZOOM = 12
 const avatarUrl = (seed) =>
   ({
     'Jardson Magalhaes': assetUrl('images/fotoperfilhomem.png'),
+    'Jose Ribamar': assetUrl('images/fotoperfilhomem.png'),
     'Jennifer Sousa': assetUrl('images/fotoperfilmulher.png'),
     'Marcos da Costa': assetUrl('images/fotoperfilhomem.png'),
     'Francisco Souza': assetUrl('images/fotoperfilhomem.png'),
@@ -22,6 +23,7 @@ const REGIONAL_TEAMS = [
     regional: 'Regional 01',
     portfolioValue: 'R$ 184,6 mi',
     worksManaged: ['HotBox Fase 2', 'Pontilhões VP1', 'Integridade KM 50'],
+    director: { name: 'José Ribamar', role: 'Liderança VALE', photo: avatarUrl('Jose Ribamar') },
     manager: { name: 'Jardson Magalhães', role: 'Gestor VALE', photo: avatarUrl('Jardson Magalhaes') },
     valePlanner: { name: 'Jennifer Sousa', role: 'Planejadora VALE', photo: avatarUrl('Jennifer Sousa') },
     arcadisPlanners: [
@@ -33,6 +35,7 @@ const REGIONAL_TEAMS = [
     regional: 'Regional 02',
     portfolioValue: 'R$ 231,2 mi',
     worksManaged: ['HotBox Fase 1', 'Pontilhões REG02', 'Integridade KM 374/375'],
+    director: { name: 'José Ribamar', role: 'Liderança VALE', photo: avatarUrl('Jose Ribamar') },
     manager: { name: 'Jardson Magalhães', role: 'Gestor VALE Regional II', photo: avatarUrl('Jardson Magalhaes') },
     valePlanner: { name: 'Jennifer Sousa', role: 'Planejadora VALE', photo: avatarUrl('Jennifer Sousa') },
     arcadisPlanners: [
@@ -44,6 +47,7 @@ const REGIONAL_TEAMS = [
     regional: 'Regional 03',
     portfolioValue: 'R$ 297,8 mi',
     worksManaged: ['PRAD', 'Pontilhões REG03', 'HotBox 763/779/839'],
+    director: { name: 'José Ribamar', role: 'Liderança VALE', photo: avatarUrl('Jose Ribamar') },
     manager: { name: 'Jardson Magalhães', role: 'Gestor VALE', photo: avatarUrl('Jardson Magalhaes') },
     valePlanner: { name: 'Jennifer Sousa', role: 'Planejadora VALE', photo: avatarUrl('Jennifer Sousa') },
     arcadisPlanners: [
@@ -127,9 +131,6 @@ async function init() {
 }
 
 function renderShell() {
-  const categories = Object.entries(state.data.summary.categories)
-  const segments = Object.entries(state.data.summary.segments)
-
   app.innerHTML = `
     <div class="page-shell">
       <section class="workspace">
@@ -138,62 +139,16 @@ function renderShell() {
             <div id="map"></div>
             <div class="map-overlay header-bar">
               <header class="app-header">
-                <div>
-                  <p class="app-kicker">EFC Presentation Mode</p>
-                  <strong class="app-title">Dashboard Executivo EFC</strong>
+                <div class="brand-strip" aria-label="Vale e Arcadis">
+                  <img src="${assetUrl('images/logo-vale.svg')}" alt="Vale" class="brand-logo brand-logo-vale" />
+                  <img src="${assetUrl('images/logo-arcadis.svg')}" alt="Arcadis" class="brand-logo brand-logo-arcadis" />
                 </div>
-                <span class="app-status">Mapa interativo em acompanhamento</span>
               </header>
             </div>
             <div class="map-overlay top-dock">
-              <section class="toolbar-panel">
-                <div class="toolbar map-toolbar">
-                  <label>
-                    <span>Categoria</span>
-                    <select id="categoryFilter">
-                      <option value="ALL">Todas</option>
-                      ${categories.map(([key, value]) => `<option value="${key}">${value.label}</option>`).join('')}
-                    </select>
-                  </label>
-                  <label>
-                    <span>Trecho</span>
-                    <select id="segmentFilter">
-                      <option value="ALL">Todos</option>
-                      ${segments.map(([key]) => `<option value="${key}">${key}</option>`).join('')}
-                    </select>
-                  </label>
-                  <label>
-                    <span>Busca</span>
-                    <input id="searchFilter" type="search" placeholder="KM, dispositivo, detalhe..." />
-                  </label>
-                </div>
-              </section>
               <div class="top-dock-right">
                 <section class="detail-card top-detail-card" id="detailCard"></section>
                 <div id="mapLegend"></div>
-              </div>
-            </div>
-            <div class="map-overlay controls" id="mapControls">
-              <div class="control-cluster control-cluster-zoom">
-                <span class="control-label">Zoom</span>
-                <div class="control-stack zoom-stack">
-                  <button id="mapZoomOutButton" class="toolbar-button" type="button" aria-label="Diminuir zoom">−</button>
-                  <button id="mapZoomInButton" class="toolbar-button" type="button" aria-label="Aumentar zoom">+</button>
-                </div>
-              </div>
-              <div class="control-cluster control-cluster-display">
-                <span class="control-label">Exibição</span>
-                <div class="control-stack meta-stack">
-                  <button id="mapQualityToggle" class="toolbar-button subtle" type="button">Qualidade: Alta</button>
-                  <button id="mapAutoplayModeToggle" class="toolbar-button subtle" type="button">Modo: Arrastar</button>
-                </div>
-              </div>
-              <div class="control-cluster control-cluster-actions">
-                <span class="control-label">Ações</span>
-                <div class="control-stack action-stack">
-                  <button id="mapAutoplayToggle" class="toolbar-button" type="button">Play</button>
-                  <button id="mapFullscreenToggle" class="toolbar-button" type="button">Tela cheia</button>
-                </div>
               </div>
             </div>
             <div class="map-overlay regional-focus" id="mapRegionalFocus"></div>
@@ -301,34 +256,6 @@ function buildMap() {
 }
 
 function bindFilters() {
-  document.querySelector('#categoryFilter').addEventListener('change', (event) => {
-    stopAutoplay()
-    state.filters.category = event.target.value
-    state.focusTarget = null
-    render()
-  })
-
-  document.querySelector('#segmentFilter').addEventListener('change', (event) => {
-    stopAutoplay()
-    state.filters.segment = event.target.value
-    state.focusTarget = null
-    render()
-  })
-
-  document.querySelector('#searchFilter').addEventListener('input', (event) => {
-    stopAutoplay()
-    state.filters.search = event.target.value.trim().toLowerCase()
-    state.focusTarget = null
-    render()
-  })
-
-  document.querySelector('#mapZoomInButton').addEventListener('click', () => adjustMapZoom(1))
-  document.querySelector('#mapZoomOutButton').addEventListener('click', () => adjustMapZoom(-1))
-  document.querySelector('#mapQualityToggle').addEventListener('click', toggleMapQuality)
-  document.querySelector('#mapAutoplayModeToggle').addEventListener('click', toggleAutoplayMode)
-  document.querySelector('#mapFullscreenToggle').addEventListener('click', toggleFullscreen)
-  document.querySelector('#mapAutoplayToggle').addEventListener('click', toggleAutoplay)
-
   document.addEventListener('fullscreenchange', () => {
     updateFullscreenButton()
     updateMapQualityButton()
@@ -341,24 +268,6 @@ function bindFilters() {
     if (event.code !== 'Space' || isInteractiveTarget(event.target)) return
     event.preventDefault()
     resetMapView()
-  })
-
-  document.querySelectorAll('[data-category-chip]').forEach((button) => {
-    button.addEventListener('click', () => {
-      state.filters.category = button.dataset.categoryChip
-      document.querySelector('#categoryFilter').value = state.filters.category
-      state.activeId = null
-      render()
-    })
-  })
-
-  document.querySelectorAll('[data-segment-chip]').forEach((button) => {
-    button.addEventListener('click', () => {
-      state.filters.segment = button.dataset.segmentChip
-      document.querySelector('#segmentFilter').value = state.filters.segment
-      state.activeId = null
-      render()
-    })
   })
 }
 
@@ -1439,6 +1348,8 @@ function renderRegionalCard(team, compact = false) {
       </div>
 
       <div class="org-tree">
+        ${renderPersonNode(team.director, 'manager')}
+        <div class="org-line"></div>
         ${renderPersonNode(team.manager, 'manager')}
         <div class="org-line"></div>
         ${renderPersonNode(team.valePlanner, 'vale')}
