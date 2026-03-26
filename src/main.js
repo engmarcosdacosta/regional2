@@ -4,6 +4,12 @@ import './style.css'
 
 const app = document.querySelector('#app')
 const assetUrl = (path) => `${import.meta.env.BASE_URL}${path.replace(/^\/+/, '')}`
+const DEFAULT_FOCUS_ZOOM = 12
+const DEFAULT_AUTOPLAY_ZOOM = 12
+const DEFAULT_DEVICE_MODE_ZOOM = 12
+const DEFAULT_OVERVIEW_MAX_ZOOM = 6
+const DEFAULT_INITIAL_ZOOM = 12
+const MAX_MAP_ZOOM = 12
 const avatarUrl = (seed) =>
   ({
     'Jardson Magalhaes': assetUrl('images/fotoperfilhomem.png'),
@@ -85,10 +91,10 @@ const state = {
     route: null,
     distance: 0,
     lastTs: 0,
-    speedMps: 797.3,
-    zoom: 11.3,
+    speedMps: 1196,
+    zoom: DEFAULT_AUTOPLAY_ZOOM,
     transitionMs: 1400,
-    stepMs: 12400,
+    stepMs: 4960,
     currentSegment: null,
   },
 }
@@ -168,32 +174,43 @@ function renderShell() {
               </div>
             </div>
             <div class="map-overlay controls" id="mapControls">
-              <div class="control-stack zoom-stack">
-                <button id="mapZoomOutButton" class="toolbar-button" type="button" aria-label="Diminuir zoom">−</button>
-                <button id="mapZoomInButton" class="toolbar-button" type="button" aria-label="Aumentar zoom">+</button>
-                <button id="mapQualityToggle" class="toolbar-button subtle" type="button">Qualidade: Alta</button>
-                <button id="mapAutoplayModeToggle" class="toolbar-button subtle" type="button">Modo: Arrastar</button>
+              <div class="control-cluster control-cluster-zoom">
+                <span class="control-label">Zoom</span>
+                <div class="control-stack zoom-stack">
+                  <button id="mapZoomOutButton" class="toolbar-button" type="button" aria-label="Diminuir zoom">−</button>
+                  <button id="mapZoomInButton" class="toolbar-button" type="button" aria-label="Aumentar zoom">+</button>
+                </div>
               </div>
-              <button id="mapAutoplayToggle" class="toolbar-button" type="button">Play</button>
-              <button id="mapResetViewButton" class="toolbar-button subtle" type="button">Vista original · Espaço</button>
-              <button id="mapFullscreenToggle" class="toolbar-button" type="button">Tela cheia</button>
+              <div class="control-cluster control-cluster-display">
+                <span class="control-label">Exibição</span>
+                <div class="control-stack meta-stack">
+                  <button id="mapQualityToggle" class="toolbar-button subtle" type="button">Qualidade: Alta</button>
+                  <button id="mapAutoplayModeToggle" class="toolbar-button subtle" type="button">Modo: Arrastar</button>
+                </div>
+              </div>
+              <div class="control-cluster control-cluster-actions">
+                <span class="control-label">Ações</span>
+                <div class="control-stack action-stack">
+                  <button id="mapAutoplayToggle" class="toolbar-button" type="button">Play</button>
+                  <button id="mapFullscreenToggle" class="toolbar-button" type="button">Tela cheia</button>
+                </div>
+              </div>
             </div>
             <div class="map-overlay regional-focus" id="mapRegionalFocus"></div>
             <div class="map-overlay spotlight" id="mapSpotlightCard"></div>
             <div class="map-overlay org" id="mapOrgCard"></div>
+            <aside class="side-panel">
+              <section class="list-card">
+                <div class="list-header">
+                  <h2>Dispositivos</h2>
+                  <span id="resultsCount"></span>
+                </div>
+                <div id="selectedSummary" class="selected-summary"></div>
+                <div id="deviceCards" class="device-cards"></div>
+              </section>
+            </aside>
           </div>
         </div>
-
-        <aside class="side-panel">
-          <section class="list-card">
-            <div class="list-header">
-              <h2>Dispositivos</h2>
-              <span id="resultsCount"></span>
-            </div>
-            <div id="selectedSummary" class="selected-summary"></div>
-            <div id="deviceCards" class="device-cards"></div>
-          </section>
-        </aside>
       </section>
     </div>
   `
@@ -264,7 +281,10 @@ function buildMap() {
 
   if (bounds.length) {
     state.homeBounds = L.latLngBounds(bounds)
-    state.map.fitBounds(state.homeBounds, { padding: [28, 28] })
+    state.map.fitBounds(state.homeBounds, {
+      padding: [12, 12],
+      maxZoom: DEFAULT_INITIAL_ZOOM,
+    })
   }
 
   const syncOverview = () => updateOverviewMap()
@@ -306,7 +326,6 @@ function bindFilters() {
   document.querySelector('#mapZoomOutButton').addEventListener('click', () => adjustMapZoom(-1))
   document.querySelector('#mapQualityToggle').addEventListener('click', toggleMapQuality)
   document.querySelector('#mapAutoplayModeToggle').addEventListener('click', toggleAutoplayMode)
-  document.querySelector('#mapResetViewButton').addEventListener('click', resetMapView)
   document.querySelector('#mapFullscreenToggle').addEventListener('click', toggleFullscreen)
   document.querySelector('#mapAutoplayToggle').addEventListener('click', toggleAutoplay)
 
@@ -387,7 +406,7 @@ function syncMapViewport() {
   if (state.focusTarget?.type === 'work') {
     const activeWork = state.visibleWorks.find((work) => work.id === state.focusTarget.id)
     if (activeWork) {
-      focusWork(activeWork, { zoom: 17 })
+      focusWork(activeWork, { zoom: DEFAULT_FOCUS_ZOOM })
       return
     }
   }
@@ -396,7 +415,7 @@ function syncMapViewport() {
     const works = state.visibleWorks.filter((work) => deviceKey(work) === state.focusTarget.key)
     if (works.length) {
       if (works.length === 1) {
-        focusWork(works[0], { zoom: 17 })
+        focusWork(works[0], { zoom: DEFAULT_FOCUS_ZOOM })
         return
       }
       focusBounds(works)
@@ -410,7 +429,7 @@ function syncMapViewport() {
 function focusBounds(works) {
   if (!works.length || !state.map) return
   const bounds = L.latLngBounds(works.map((work) => work.position))
-  state.map.fitBounds(bounds, { padding: [48, 48], maxZoom: 17 })
+  state.map.fitBounds(bounds, { padding: [48, 48], maxZoom: DEFAULT_FOCUS_ZOOM })
 }
 
 function updateMarkers() {
@@ -498,13 +517,9 @@ function updateLineHighlights() {
 function renderDetails() {
   const activeWork = state.visibleWorks.find((work) => work.id === state.activeId)
   const detailCard = document.querySelector('#detailCard')
-
-  if (!activeWork) {
-    detailCard.innerHTML = `<div class="empty-state"><p>Nenhum dispositivo encontrado com os filtros atuais.</p></div>`
-    return
-  }
-
-  detailCard.innerHTML = `
+  const nextMarkup = !activeWork
+    ? `<div class="empty-state"><p>Nenhum dispositivo encontrado com os filtros atuais.</p></div>`
+    : `
     <div class="detail-surface" style="${categoryArtworkStyle(activeWork.category)}">
       <div class="detail-topline">
         <span class="pill" style="--pill:${activeWork.color}">${activeWork.categoryLabel}</span>
@@ -515,6 +530,21 @@ function renderDetails() {
       <p>${activeWork.detail}</p>
     </div>
   `
+
+  if (!detailCard.dataset.ready) {
+    detailCard.innerHTML = nextMarkup
+    detailCard.dataset.ready = 'true'
+    return
+  }
+
+  window.clearTimeout(detailCard._swapTimer)
+  detailCard.classList.add('is-transitioning')
+  detailCard._swapTimer = window.setTimeout(() => {
+    detailCard.innerHTML = nextMarkup
+    window.requestAnimationFrame(() => {
+      detailCard.classList.remove('is-transitioning')
+    })
+  }, 110)
 }
 
 function renderDeviceCards() {
@@ -750,7 +780,7 @@ function updateOverviewMap(segmentNameParam, activeWorkParam) {
   const segmentBounds = L.latLngBounds(line.points)
   state.overviewMap.fitBounds(segmentBounds, {
     padding: [12, 12],
-    maxZoom: 11,
+    maxZoom: DEFAULT_OVERVIEW_MAX_ZOOM,
     animate: false,
   })
 
@@ -870,15 +900,15 @@ function resetMapView() {
 }
 
 function focusWork(work, options = {}) {
-  state.map.flyTo(work.position, options.zoom ?? 17, { duration: 6.5 })
+  state.map.flyTo(work.position, options.zoom ?? DEFAULT_FOCUS_ZOOM, { duration: 2.17 })
 }
 
 function adjustMapZoom(delta) {
   if (!state.map) return
 
   const currentZoom = state.map.getZoom()
-  const nextZoom = Math.max(3, Math.min(18, currentZoom + delta))
-  state.autoplay.zoom = Math.max(3, Math.min(18, state.autoplay.zoom + delta))
+  const nextZoom = Math.max(3, Math.min(MAX_MAP_ZOOM, currentZoom + delta))
+  state.autoplay.zoom = Math.max(3, Math.min(MAX_MAP_ZOOM, state.autoplay.zoom + delta))
 
   if (state.autoplay.playing && state.autoplay.route) {
     const currentPoint = pointAlongRoute(state.autoplay.route, state.autoplay.distance) ?? state.map.getCenter()
@@ -900,6 +930,9 @@ function toggleAutoplayMode() {
   if (wasPlaying) stopAutoplay()
 
   state.autoplay.mode = state.autoplay.mode === 'route' ? 'step' : 'route'
+  if (state.autoplay.mode === 'step') {
+    state.autoplay.zoom = DEFAULT_DEVICE_MODE_ZOOM
+  }
   if (state.autoplay.mode === 'step' && state.mapQuality !== 'high') {
     state.mapQuality = 'high'
     applyBaseLayerQuality()
@@ -1021,7 +1054,7 @@ function startStepAutoplay() {
   state.focusTarget = { type: 'work', id: activeWork.id }
 
   prefetchEntryTargets()
-  focusWork(activeWork, { zoom: state.autoplay.zoom, duration: 2.8 })
+  focusWork(activeWork, { zoom: state.autoplay.zoom, duration: 0.93 })
   render()
   scheduleStepAutoplay()
 }
@@ -1068,7 +1101,7 @@ function advanceStepAutoplay() {
   state.focusTarget = { type: 'work', id: nextWork.id }
 
   prefetchTilesForWork(nextWork, Math.round(state.autoplay.zoom))
-  focusWork(nextWork, { zoom: state.autoplay.zoom, duration: 2.8 })
+  focusWork(nextWork, { zoom: state.autoplay.zoom, duration: 0.93 })
   render()
 }
 
@@ -1155,7 +1188,7 @@ function prefetchEntryTargets() {
     }
   })
 
-  targets.forEach((work) => prefetchTilesForWork(work, 17))
+  targets.forEach((work) => prefetchTilesForWork(work, DEFAULT_FOCUS_ZOOM))
 }
 
 function buildAutoplayRoute() {
