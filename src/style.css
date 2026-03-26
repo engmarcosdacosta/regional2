@@ -552,7 +552,7 @@ kbd {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
   margin-bottom: 0;
-  align-items: end;
+  align-items: start;
 }
 
 .toolbar label {
@@ -560,8 +560,9 @@ kbd {
   flex-direction: column;
   gap: 6px;
   color: #01070e;
-  font-size: 1.64rem;
+  font-size: 0.82rem;
   font-weight: 600;
+  min-width: 0;
 }
 
 .toolbar select,
@@ -584,11 +585,15 @@ kbd {
 .toolbar-button {
   min-height: 45px;
   padding: 11px 13px;
-  white-space: nowrap;
+  white-space: normal;
   box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
   font-size: 0.94rem;
   font-weight: 600;
   line-height: 1.1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .toolbar-button.subtle {
@@ -659,7 +664,7 @@ kbd {
   left: var(--overlay-edge);
   right: var(--overlay-edge);
   display: grid;
-  grid-template-columns: 392px 332px;
+  grid-template-columns: minmax(320px, 392px) minmax(280px, 332px);
   gap: var(--overlay-gap);
   align-items: start;
   justify-content: space-between;
@@ -670,12 +675,14 @@ kbd {
   display: grid;
   gap: var(--overlay-gap);
   align-items: start;
+  justify-items: end;
+  min-width: 0;
 }
 
 .toolbar-panel {
   border-radius: 0;
   padding: 0;
-  width: 392px;
+  width: 100%;
   justify-self: start;
   background: transparent;
   border: none;
@@ -744,7 +751,8 @@ kbd {
   left: var(--overlay-edge);
   right: auto;
   transform: none;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, auto);
   gap: var(--overlay-gap);
   align-items: flex-start;
 }
@@ -755,10 +763,11 @@ kbd {
 }
 
 .zoom-stack {
-  grid-template-columns: repeat(2, minmax(0, max-content));
+  grid-template-columns: repeat(2, minmax(72px, 1fr));
 }
 
-.zoom-stack #mapQualityToggle {
+.zoom-stack #mapQualityToggle,
+.zoom-stack #mapAutoplayModeToggle {
   grid-column: 1 / -1;
 }
 
@@ -1161,12 +1170,13 @@ kbd {
   min-height: 228px;
   max-height: 228px;
   padding: 12px;
-  width: 332px;
+  width: 100%;
+  max-width: 332px;
   justify-self: end;
   position: relative;
   z-index: 681;
   overflow: hidden;
-  margin-top: -76px;
+  margin-top: 0;
 }
 
 .detail-card {
@@ -1324,6 +1334,7 @@ kbd {
   justify-content: space-between;
   gap: 12px;
   margin-bottom: 12px;
+  flex-wrap: wrap;
 }
 
 .selected-summary {
@@ -1390,7 +1401,7 @@ kbd {
   text-align: left;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
   cursor: pointer;
   transition:
@@ -1417,6 +1428,8 @@ kbd {
 .device-card-meta {
   font-size: 0.86rem;
   color: rgba(1, 7, 14, 0.9);
+  flex: 0 0 auto;
+  text-align: right;
 }
 
 .device-card-body {
@@ -1647,6 +1660,16 @@ kbd {
   .map-overlay.top-dock {
     grid-template-columns: 1fr;
     right: 360px;
+    gap: 10px;
+  }
+
+  .top-dock-right {
+    justify-items: stretch;
+  }
+
+  .top-detail-card {
+    justify-self: stretch;
+    max-width: none;
   }
 }
 
@@ -1680,6 +1703,7 @@ kbd {
   .map-overlay.header-bar {
     left: 12px;
     right: 12px;
+    width: auto;
   }
 
   .map-overlay.top-dock {
@@ -1687,6 +1711,12 @@ kbd {
     left: 12px;
     right: 12px;
     grid-template-columns: 1fr;
+  }
+
+  .toolbar-panel,
+  .top-detail-card {
+    width: 100%;
+    max-width: none;
   }
 
   .side-panel {
@@ -1714,6 +1744,10 @@ kbd {
     right: 12px;
     top: 12px;
     display: grid;
+  }
+
+  .zoom-stack {
+    grid-template-columns: repeat(2, minmax(68px, 1fr));
   }
 
   .device-cards {
