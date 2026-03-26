@@ -550,7 +550,7 @@ kbd {
 .toolbar {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
+  gap: 8px;
   margin-bottom: 0;
   align-items: start;
 }
@@ -558,9 +558,9 @@ kbd {
 .toolbar label {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   color: #01070e;
-  font-size: 0.82rem;
+  font-size: 0.72rem;
   font-weight: 600;
   min-width: 0;
 }
@@ -570,24 +570,24 @@ kbd {
   border: 1px solid rgba(255, 255, 255, 0.24);
   background: rgba(255, 255, 255, 0.135);
   border-radius: 999px;
-  padding: 11px 13px;
-  min-height: 45px;
+  padding: 8px 11px;
+  min-height: 36px;
   color: #01070e;
   box-shadow:
     0 8px 18px rgba(15, 23, 42, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(18px) saturate(1.08);
-  font-size: 0.94rem;
+  font-size: 0.82rem;
   font-weight: 600;
   appearance: none;
 }
 
 .toolbar-button {
-  min-height: 45px;
-  padding: 11px 13px;
+  min-height: 36px;
+  padding: 8px 11px;
   white-space: normal;
   box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
-  font-size: 0.94rem;
+  font-size: 0.8rem;
   font-weight: 600;
   line-height: 1.1;
   display: inline-flex;
@@ -611,14 +611,14 @@ kbd {
 .map-overlay.header-bar {
   top: 18px;
   left: var(--overlay-edge);
-  width: 392px;
+  width: 340px;
   right: auto;
 }
 
 .app-header {
-  min-height: 52px;
-  border-radius: 18px;
-  padding: 12px 16px;
+  min-height: 46px;
+  border-radius: 16px;
+  padding: 10px 13px;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -635,14 +635,14 @@ kbd {
 
 .app-kicker {
   margin: 0 0 2px;
-  font-size: 0.72rem;
+  font-size: 0.64rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: rgba(1, 7, 14, 0.8);
 }
 
 .app-title {
-  font-size: 1.08rem;
+  font-size: 0.94rem;
   line-height: 1.18;
   letter-spacing: -0.02em;
   color: #01070e;
@@ -653,8 +653,8 @@ kbd {
   align-items: center;
   justify-content: flex-end;
   text-align: right;
-  max-width: 130px;
-  font-size: 0.82rem;
+  max-width: 112px;
+  font-size: 0.72rem;
   line-height: 1.3;
   color: rgba(1, 7, 14, 0.9);
 }
@@ -664,7 +664,7 @@ kbd {
   left: var(--overlay-edge);
   right: var(--overlay-edge);
   display: grid;
-  grid-template-columns: minmax(320px, 392px) minmax(280px, 332px);
+  grid-template-columns: minmax(280px, 340px) minmax(236px, 280px);
   gap: var(--overlay-gap);
   align-items: start;
   justify-content: space-between;
@@ -747,7 +747,7 @@ kbd {
 }
 
 .map-overlay.controls {
-  top: 208px;
+  top: 184px;
   left: var(--overlay-edge);
   right: auto;
   transform: none;
@@ -759,11 +759,11 @@ kbd {
 
 .control-stack {
   display: grid;
-  gap: 8px;
+  gap: 6px;
 }
 
 .zoom-stack {
-  grid-template-columns: repeat(2, minmax(72px, 1fr));
+  grid-template-columns: repeat(2, minmax(62px, 1fr));
 }
 
 .zoom-stack #mapQualityToggle,
@@ -1148,10 +1148,10 @@ kbd {
 
 .side-panel {
   position: absolute;
-  top: 318px;
+  top: 268px;
   right: var(--overlay-edge);
   bottom: var(--overlay-edge);
-  width: 332px;
+  width: 280px;
   display: grid;
   gap: var(--overlay-gap);
   min-height: 0;
@@ -1161,17 +1161,17 @@ kbd {
 
 .detail-card,
 .list-card {
-  border-radius: 28px;
+  border-radius: 20px;
   pointer-events: auto;
 }
 
 .top-detail-card {
-  height: 228px;
-  min-height: 228px;
-  max-height: 228px;
-  padding: 12px;
+  height: 184px;
+  min-height: 184px;
+  max-height: 184px;
+  padding: 8px;
   width: 100%;
-  max-width: 332px;
+  max-width: 280px;
   justify-self: end;
   position: relative;
   z-index: 681;
@@ -1180,25 +1180,25 @@ kbd {
 }
 
 .detail-card {
-  padding: 12px;
+  padding: 8px;
 }
 
 .list-card {
-  padding: 16px;
+  padding: 12px;
   min-height: 0;
 }
 
 .detail-card h2 {
-  margin-top: 10px;
-  font-size: 1.48rem;
+  margin-top: 8px;
+  font-size: 1.12rem;
   line-height: 1.04;
   letter-spacing: -0.03em;
   color: #01070e;
 }
 
 .detail-card h3 {
-  margin-top: 10px;
-  font-size: 1rem;
+  margin-top: 6px;
+  font-size: 0.84rem;
   line-height: 1.32;
   color: rgba(1, 7, 14, 0.96);
   display: -webkit-box;
@@ -1208,10 +1208,10 @@ kbd {
 }
 
 .detail-card p {
-  margin-top: 8px;
+  margin-top: 6px;
   color: rgba(1, 7, 14, 0.92);
-  font-size: 0.94rem;
-  line-height: 1.45;
+  font-size: 0.78rem;
+  line-height: 1.35;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
@@ -1219,8 +1219,8 @@ kbd {
 }
 
 .detail-surface {
-  border-radius: 22px;
-  padding: 12px 12px 20px;
+  border-radius: 16px;
+  padding: 8px 8px 12px;
   height: 100%;
   min-height: 100%;
   box-sizing: border-box;
@@ -1236,13 +1236,13 @@ kbd {
 }
 
 .detail-surface > *:not(.detail-topline) {
-  margin-left: 14px;
-  margin-right: 14px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .detail-topline {
-  padding: 14px 14px 0;
-  min-height: 34px;
+  padding: 10px 10px 0;
+  min-height: 28px;
 }
 
 .pill,
@@ -1252,7 +1252,7 @@ kbd {
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  padding: 6px 10px;
+  padding: 4px 8px;
 }
 
 .pill {
@@ -1332,21 +1332,22 @@ kbd {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 12px;
+  gap: 8px;
+  margin-bottom: 8px;
   flex-wrap: wrap;
 }
 
 .selected-summary {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .selection-chip {
-  padding: 8px 12px;
+  padding: 6px 10px;
+  font-size: 0.76rem;
 }
 
 .selection-chip.active {
@@ -1356,12 +1357,12 @@ kbd {
 }
 
 .selection-count {
-  font-size: 0.82rem;
+  font-size: 0.72rem;
 }
 
 .device-cards {
   display: grid;
-  gap: 12px;
+  gap: 8px;
   max-height: none;
   overflow: auto;
   padding-right: 2px;
@@ -1376,7 +1377,7 @@ kbd {
 
 .device-card {
   border: 1px solid rgba(255, 255, 255, 0.24);
-  border-radius: 22px;
+  border-radius: 16px;
   background: var(--glass-bg);
   overflow: hidden;
   box-shadow: var(--glass-shadow);
@@ -1397,12 +1398,12 @@ kbd {
   background-size: cover;
   background-position: center right;
   background-blend-mode: screen, normal;
-  padding: 14px 15px;
+  padding: 10px 11px;
   text-align: left;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 12px;
+  gap: 8px;
   cursor: pointer;
   transition:
     transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
@@ -1413,29 +1414,29 @@ kbd {
 
 .device-card-overline {
   display: block;
-  font-size: 0.8rem;
-  margin-bottom: 3px;
+  font-size: 0.66rem;
+  margin-bottom: 2px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: rgba(1, 7, 14, 0.86);
 }
 
 .device-card-head strong {
-  font-size: 1.02rem;
+  font-size: 0.84rem;
   color: #01070e;
 }
 
 .device-card-meta {
-  font-size: 0.86rem;
+  font-size: 0.72rem;
   color: rgba(1, 7, 14, 0.9);
   flex: 0 0 auto;
   text-align: right;
 }
 
 .device-card-body {
-  padding: 0 14px 14px;
+  padding: 0 10px 10px;
   display: grid;
-  gap: 8px;
+  gap: 6px;
 }
 
 .device-option,
@@ -1443,9 +1444,9 @@ kbd {
   width: 100%;
   text-align: left;
   border: 1px solid rgba(255, 255, 255, 0.24);
-  border-radius: 16px;
+  border-radius: 12px;
   background: rgba(255, 255, 255, 0.135);
-  padding: 10px 12px;
+  padding: 8px 10px;
   cursor: pointer;
   color: #04101b;
   box-shadow:
@@ -1504,23 +1505,23 @@ kbd {
 .device-option-title,
 .work-item strong {
   display: block;
-  font-size: 0.9rem;
-  line-height: 1.28;
+  font-size: 0.78rem;
+  line-height: 1.22;
 }
 
 .device-option-meta,
 .work-item small {
   display: block;
-  margin-top: 4px;
-  font-size: 0.8rem;
+  margin-top: 3px;
+  font-size: 0.68rem;
 }
 
 .device-option small {
   display: block;
-  margin-top: 5px;
+  margin-top: 4px;
   color: rgba(1, 7, 14, 0.86);
-  font-size: 0.78rem;
-  line-height: 1.35;
+  font-size: 0.68rem;
+  line-height: 1.28;
 }
 
 .work-marker-shell {
